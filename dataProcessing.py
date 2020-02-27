@@ -1,4 +1,4 @@
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, LongType, DoubleType, TimestampType
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, LongType, DoubleType
 
 
 def process_song(spark, pathInput):

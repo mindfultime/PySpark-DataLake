@@ -1,11 +1,10 @@
+# pip install pyspark
+
 import configparser
 import os
-from dataProcessing import process_song, process_log, check_df,write_to_s3
-
-from star_schema import dim_songs,dim_users,dim_time,dim_artists,fact_songplays
-
+from dataProcessing import process_song, process_log, check_df, write_to_s3
+from star_schema import dim_songs, dim_users, dim_time, dim_artists, fact_songplays
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, LongType, DoubleType, TimestampType
 
 
 def main():
@@ -71,11 +70,9 @@ if __name__ == '__main__':
     check_df(dim_time(DF['log']), 'dim_time')
 
     # fact_songplays
-    check_df(fact_songplays(DF),"fact_songplays")
+    check_df(fact_songplays(DF), "fact_songplays")
 
     # writing dim_songs to s3 and partitioning it by song_id and artist_id
     # pDF.write_to_s3(dim_songs, outPath, ("song_id", "artist_id"))
 
     spark.stop()
-
-
