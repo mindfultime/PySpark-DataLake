@@ -3,11 +3,11 @@ import pyspark.sql.functions as F
 
 def dim_users(df):
     """
-        This function is used for process df into a user dimension table called:
+        This function is used for processing df into a user dimension table called:
             dim_user: user_id, first_name, last_name, gender, level
 
-        :param df: dataframe
-        :return: nne
+        :param df: log dataframe
+        :return: dim_users table
         """
 
     # extracting distinct columns from logDF to users dimensional table
@@ -25,8 +25,8 @@ def dim_songs(df):
         This function is used for process df into songs dimension table called:
             dim_song: song_id, title, artist_id, year, duration
 
-        :param df: dataframe
-        :return: none
+        :param df: song dataframe
+        :return: dim_songs table
         """
     # extracting columns from songDf to songs dimensional table
     dim_songs = df.select("song_id",
@@ -43,8 +43,8 @@ def dim_artists(df):
         This function is used for process df into artists dimension table called:
             dim_artists: artist_id, name, location, latitude, longitude
 
-        :param df: dataframe
-        :return: none
+        :param df: song dataframe
+        :return: dim_artist table
         """
     # extracting columns from logDF to artists dimensional table
     dim_artists = df.select(F.col("artist_id"),
@@ -61,8 +61,8 @@ def dim_time(df):
         This function is used for process df into time dimension table called:
             dim_time: start_time, hour, day, week, month, year, weekday
 
-        :param df: dataframe
-        :return: none
+        :param df: log dataframe
+        :return: dim_time table
         """
     dim_time = df.select(F.col("start_time"),
                          F.hour(F.col("start_time")),
@@ -83,7 +83,7 @@ def fact_songplays(df):
                         session_id, session_id, user_agent
 
         :param df: dataframe dict for song and log
-        :return: none
+        :return: fact_songplays table
     """
 
     # joining columns from logDF and songDF to songplays df
