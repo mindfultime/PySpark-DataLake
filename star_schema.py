@@ -3,7 +3,7 @@ import pyspark.sql.functions as F
 
 def dim_users(df):
     """
-        This function is used for processing df into a user dimension table called:
+    This function is used for processing df into a user dimension table called:
             dim_user: user_id, first_name, last_name, gender, level
 
         :param df: log dataframe
