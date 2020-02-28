@@ -60,28 +60,43 @@ if __name__ == '__main__':
     DF = {'song': process_song(spark, song_filepath),
           'log': process_log(spark, log_filepath)}
 
-    # dim_users based on logDF
-    # check_df(dim_users(DF['log']), "dim_users")
+    # creating dim_users based on log
+    dim_users = dim_users(DF['log'])
+
+    # check_df(dim_users, "dim_users")
+
     # writing dim_users to s3 partitioned by userId and level
     write_to_s3(dim_users, {'S3': S3, 'table': 'dim_users'}, ("userId", "level"))
 
-    # dim_artists based on songDF
-    # check_df(dim_artists(DF['song']), "dim_artists")
+    # creating dim_artists based on song
+    dim_artists = dim_artists(DF['song'])
+
+    # check_df(dim_artists, "dim_artists")
+
     # writing dim_artists to s3 partitioned by song_id and artist_id
     write_to_s3(dim_artists, {'S3': S3, 'table': "dim_artists"}, ("artist_id"))
 
-    # dim_songs based on songDF
-    # check_df(dim_songs(DF['song']), "dim_songs")
+    # creating dim_songs dataframe based on song
+    dim_songs = dim_songs(DF['song'])
+
+    # check_df(dim_songs, "dim_songs")
+
     # writing dim_songs to s3 partitioned by song_id and artist_id
     write_to_s3(dim_songs, {'S3': S3, 'table': "dim_songs"}, ("year", "artist_id"))
 
-    # dim_time
+    # creating dim_time dataframe from Log
+    dim_time = dim_time(DF['log'])
+
     # check_df(dim_time(DF['log']), 'dim_time')
+
     # writing dim_time to s3 partitioned by year and moth
     write_to_s3(dim_time, {'S3': S3, 'table': "dim_time"}, ("year", "month"))
 
-    # fact_songplays
+    # creating fact_songplays dataframe from DF dictionary
+    fact_songplays = fact_songplays(DF)
+
     # check_df(fact_songplays(DF), "fact_songplays")
+
     # writing fact_songplays to s3 partitioned by year and moth
     write_to_s3(fact_songplays, {'S3': S3, 'table': "fact_songplays"}, ("year", "month"))
 
