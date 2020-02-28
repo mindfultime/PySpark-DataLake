@@ -20,24 +20,6 @@ def dim_users(df):
     return dim_users
 
 
-def dim_songs(df):
-    """
-        This function is used for process df into songs dimension table called:
-            dim_song: song_id, title, artist_id, year, duration
-
-        :param df: song dataframe
-        :return: dim_songs table
-        """
-    # extracting columns from songDf to songs dimensional table
-    dim_songs = df.select("song_id",
-                          F.col("title").alias("song"),
-                          "artist_id",
-                          "year",
-                          "duration").distinct()
-
-    return dim_songs
-
-
 def dim_artists(df):
     """
         This function is used for process df into artists dimension table called:
@@ -54,6 +36,24 @@ def dim_artists(df):
                             F.col("artist_longitude").alias("longitude")).distinct()
 
     return dim_artists
+
+
+def dim_songs(df):
+    """
+        This function is used for process df into songs dimension table called:
+            dim_song: song_id, title, artist_id, year, duration
+
+        :param df: song dataframe
+        :return: dim_songs table
+        """
+    # extracting columns from songDf to songs dimensional table
+    dim_songs = df.select("song_id",
+                          F.col("title").alias("song"),
+                          "artist_id",
+                          "year",
+                          "duration").distinct()
+
+    return dim_songs
 
 
 def dim_time(df):
