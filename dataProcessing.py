@@ -147,7 +147,6 @@ def check_df(df, outPath):
 
 def write_to_s3(df, outPath, partitionBy=None):
     """
-
     :param df: dataframe from the dim and fact tables
     :param outPath: filename for the dim and fact tables
     :param partitionBy: partition criteria for parquet
