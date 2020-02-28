@@ -6,22 +6,30 @@ from dataProcessing import process_song, process_log, check_df, write_to_s3
 from star_schema import dim_songs, dim_users, dim_time, dim_artists, fact_songplays
 from pyspark.sql import SparkSession
 
+# setting configparser for aws and filepaths to instantiate immediately
+# config obj for parsing aws credential
+config = configparser.ConfigParser()
+
+# reading aws config file
+config.read_file(open('/Users/akshu/.aws/config'))
+
+# setting environment variable for AWS S3 access.
+os.environ["AWS_ACCESS_KEY_ID"] = config['default']['AWS_ACCESS_KEY_ID']
+os.environ["AWS_SECRET_ACCESS_KEY"] = config['default']['AWS_SECRET_ACCESS_KEY']
+
+# getting song and log file path
+URL = config['S3']['DEND-URL']
+S3 = config['S3']['S3-SPARK']
+
+song_cfg = config['SONG']['SONG_FILE']
+log_cfg = config['LOG']['LOG_FILE']
+
 
 def main():
     """
     This function instantiates the spark app and connects to aws
     :return: spark session
     """
-    # instantiate immediately
-    # config obj for parsing aws credential
-    config = configparser.ConfigParser()
-
-    # reading aws config file
-    config.read_file(open('/Users/akshu/.aws/config'))
-
-    # setting environment variable for AWS S3 access.
-    os.environ["AWS_ACCESS_KEY_ID"] = config['default']['AWS_ACCESS_KEY_ID']
-    os.environ["AWS_SECRET_ACCESS_KEY"] = config['default']['AWS_SECRET_ACCESS_KEY']
 
     # starting spark session
     spark = SparkSession \
@@ -44,35 +52,38 @@ if __name__ == '__main__':
     output = "sparkify"
 
     # setting path for song from S3 data lake
-    song_file = "song_data/A/B/C/*.json"
-    all_songs = "*/*/*/*.json"
-    song_filepath = "{}{}".format("s3a://udacity-dend/", song_file)
+    song_filepath = "{}{}".format(URL, song_cfg)
 
     # setting path for logs from S3 data lake
-    log_file = "log_data/2018/*/*.json"
-    all_logs = "*/*/*.json"
-    log_filepath = "{}{}".format("s3a://udacity-dend/", log_file)
+    log_filepath = "{}{}".format(URL, log_cfg)
 
     # setting datafram dictionary for both song and log
     DF = {'song': process_song(spark, song_filepath),
           'log': process_log(spark, log_filepath)}
 
     # dim_users based on logDF
-    dim_users(DF['log'])
+    check_df(dim_users(DF['log']))
+    # writing dim_users to s3 partitioned by userId and level
+    write_to_s3(dim_users, {'S3': S3, 'table': 'dim_users'}, ("artist_id", "year"))
 
     # dim_artists based on songDF
-    dim_artists(DF['song'])
+    check_df(dim_artists(DF['song']))
+    # writing dim_artists to s3 partitioned by song_id and artist_id
+    write_to_s3(dim_artists, {'S3': S3, 'table': "dim_artists"}, ("artist_id", "year"))
 
     # dim_songs based on songDF
-    dim_songs(DF['song'])
+    check_df(dim_songs(DF['song']))
+    # writing dim_songs to s3 partitioned by song_id and artist_id
+    write_to_s3(dim_songs, {'S3': S3, 'table': "dim_songs"}, ("song_id", "artist_id"))
 
     # dim_time
     check_df(dim_time(DF['log']), 'dim_time')
+    # writing dim_time to s3 partitioned by year and moth
+    write_to_s3(dim_time, {'S3': S3, 'table': "dim_time"}, ("year", "month"))
 
     # fact_songplays
     check_df(fact_songplays(DF), "fact_songplays")
-
-    # writing dim_songs to s3 and partitioning it by song_id and artist_id
-    # pDF.write_to_s3(dim_songs, outPath, ("song_id", "artist_id"))
+    # writing fact_songplays to s3 partitioned by year and moth
+    write_to_s3(fact_songplays, {'S3': S3, 'table': "fact_songplays"}, ("year", "month"))
 
     spark.stop()

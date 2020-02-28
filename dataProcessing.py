@@ -154,9 +154,10 @@ def write_to_s3(df, outPath, partitionBy=None):
     :return: none
     """
     if partitionBy is not None:
-        print(" Partitioning BY {} and writing {} table to S3 datalake".format(partitionBy, outPath))
-        df.write.partitionBy(partitionBy).parquet("s3a://datalake-sparkify-s3/{}".format(outPath))
+        print(" Partitioning BY {0} and writing {2} table to S3 Bucket: {1} datalake" \
+              .format(partitionBy, outPath['S3'], outPath['table']))
+        # df.write.partitionBy(partitionBy).parquet("{}{}".format(outPath['S3'], outPath['table']))
 
     else:
-        print(" Writing {} table to s3 datalake".format(outPath))
-        df.write.parquet("s3a://datalake-sparkify-s3/{}".format(outPath))
+        print(" Writing {1} table to S3 Bucket: {0} datalake".format(outPath['S3'], outPath['table']))
+        # df.write.parquet("{}{}".format(outPath['S3'], outPath['table']))

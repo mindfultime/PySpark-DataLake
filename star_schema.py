@@ -65,11 +65,11 @@ def dim_time(df):
         :return: dim_time table
         """
     dim_time = df.select(F.col("start_time"),
-                         F.hour(F.col("start_time")),
-                         F.dayofmonth(F.col("start_time")),
-                         F.weekofyear(F.col("start_time")),
-                         F.month(F.col("start_time")),
-                         F.year(F.col("start_time")),
+                         F.hour(F.col("start_time").alias("hour")),
+                         F.dayofmonth(F.col("start_time").alias("day")),
+                         F.weekofyear(F.col("start_time").alias("week")),
+                         F.month(F.col("start_time").alias("month")),
+                         F.year(F.col("start_time").alias("year")),
                          F.date_format(F.col("start_time"), 'F').alias("weekday")
                          ).distinct()
 
