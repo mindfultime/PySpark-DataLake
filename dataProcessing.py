@@ -168,3 +168,7 @@ def write_to_s3(df, outPath, partitionByCol=None):
               )
 
         df.write.parquet(file_path)
+
+    print("Completed Writing {} table to S3 Bucket {} for "
+          "\n------------------------------------------\n".format(outPath['table'], outPath['S3']))
+
