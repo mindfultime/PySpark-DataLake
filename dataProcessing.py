@@ -159,12 +159,12 @@ def write_to_s3(df, outPath, partitionByCol=None):
               .format(partitionByCol, outPath['S3'], outPath['table'])
               )
 
-        df.write.partitionBy(partitionByCol).parquet(file_path)
+        df.write.partitionBy(partitionByCol).parquet(file_path).mode("overwrite")
 
     else:
 
         print(" Writing {1} table to S3 Bucket: {0} datalake".
-              format(outPath['S3'], outPath['table'])
+              format(outPath['S3'], outPath['table']).mode("overwrite")
               )
 
         df.write.parquet(file_path)
