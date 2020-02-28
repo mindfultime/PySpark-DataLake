@@ -30,7 +30,6 @@ def main():
     This function instantiates the spark app and connects to aws
     :return: spark session
     """
-
     # starting spark session
     spark = SparkSession \
         .builder \
