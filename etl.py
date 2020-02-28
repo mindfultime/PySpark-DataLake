@@ -61,17 +61,17 @@ if __name__ == '__main__':
           'log': process_log(spark, log_filepath)}
 
     # dim_users based on logDF
-    check_df(dim_users(DF['log']),"dim_users")
+    check_df(dim_users(DF['log']), "dim_users")
     # writing dim_users to s3 partitioned by userId and level
     write_to_s3(dim_users, {'S3': S3, 'table': 'dim_users'}, ("artist_id", "year"))
 
     # dim_artists based on songDF
-    check_df(dim_artists(DF['song']),"dim_artists")
+    check_df(dim_artists(DF['song']), "dim_artists")
     # writing dim_artists to s3 partitioned by song_id and artist_id
     write_to_s3(dim_artists, {'S3': S3, 'table': "dim_artists"}, ("artist_id", "year"))
 
     # dim_songs based on songDF
-    check_df(dim_songs(DF['song']),"dim_songs")
+    check_df(dim_songs(DF['song']), "dim_songs")
     # writing dim_songs to s3 partitioned by song_id and artist_id
     write_to_s3(dim_songs, {'S3': S3, 'table': "dim_songs"}, ("song_id", "artist_id"))
 
