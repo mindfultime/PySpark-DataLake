@@ -145,18 +145,26 @@ def check_df(df, outPath):
           "--------------------------------------")
 
 
-def write_to_s3(df, outPath, partitionBy=None):
+def write_to_s3(df, outPath, partitionByCol=None):
     """
     :param df: dataframe from the dim and fact tables
     :param outPath: filename for the dim and fact tables
     :param partitionBy: partition criteria for parquet
     :return: none
     """
-    if partitionBy is not None:
-        print(" Partitioning BY {0} and writing {2} table to S3 Bucket: {1} datalake" \
-              .format(partitionBy, outPath['S3'], outPath['table']))
-        # df.write.partitionBy(partitionBy).parquet("{}{}".format(outPath['S3'], outPath['table']))
+    file_path = "{}{}".format(outPath['S3'], outPath['table'])
+    if partitionByCol is not None:
+
+        print(" Partitioning BY {0} and writing {2} table to S3 Bucket: {1} datalake"
+              .format(partitionByCol, outPath['S3'], outPath['table'])
+              )
+
+        df.write.partitionBy(partitionByCol).parquet(file_path)
 
     else:
-        print(" Writing {1} table to S3 Bucket: {0} datalake".format(outPath['S3'], outPath['table']))
-        # df.write.parquet("{}{}".format(outPath['S3'], outPath['table']))
+
+        print(" Writing {1} table to S3 Bucket: {0} datalake".
+              format(outPath['S3'], outPath['table'])
+              )
+
+        df.write.parquet(file_path)
