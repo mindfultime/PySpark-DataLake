@@ -6,7 +6,7 @@
 import configparser
 import os
 from dataProcessing import process_song, process_log, check_df, write_to_s3
-from star_schema import dim_songs, dim_users, dim_time, dim_artists, fact_songplays
+from starSchema import dim_songs, dim_users, dim_time, dim_artists, fact_songplays
 from pyspark.sql import SparkSession
 
 # findspark.init()
