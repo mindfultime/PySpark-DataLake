@@ -114,8 +114,7 @@ def process_log(spark, pathInput):
     # filter page based on NextSong
     logDF = logDF.filter(logDF.page == "NextSong").filter(logDF.userId.isNotNull())
 
-    # converting nano epoch to timestamp in column start_time
-    logDF = logDF.withColumn("start_time", (logDF.ts / 1000).cast("timestamp"))
+
 
     return logDF
 
@@ -149,7 +148,7 @@ def write_to_s3(df, outPath, partitionByCol=None):
     """
     :param df: dataframe from the dim and fact tables
     :param outPath: filename for the dim and fact tables
-    :param partitionBy: partition criteria for parquet
+    :param partitionByCol: partition criteria for parquet
     :return: none
     """
     file_path = "{}{}".format(outPath['S3'], outPath['table'])
@@ -159,16 +158,21 @@ def write_to_s3(df, outPath, partitionByCol=None):
               .format(partitionByCol, outPath['S3'], outPath['table'])
               )
 
-        df.write.partitionBy(partitionByCol).parquet(file_path).mode("overwrite")
+        df.write.mode("overwrite").partitionBy(partitionByCol).parquet(file_path)
+
+        print("Completed Writing {} table to S3 Bucket {} "
+              "\n------------------------------------------\n".format(outPath['table'], outPath['S3']))
 
     else:
 
         print(" Writing {1} table to S3 Bucket: {0} datalake".
-              format(outPath['S3'], outPath['table']).mode("overwrite")
+              format(outPath['S3'], outPath['table'])
               )
 
-        df.write.parquet(file_path)
+        df.write.mode("overwrite").parquet(file_path)
 
-    print("Completed Writing {} table to S3 Bucket {} for "
-          "\n------------------------------------------\n".format(outPath['table'], outPath['S3']))
+        print("Completed Writing {} table to S3 Bucket {} "
+              "\n------------------------------------------\n".format(outPath['table'], outPath['S3']))
+
+
 
