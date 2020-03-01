@@ -73,4 +73,4 @@ This file consists of all the configuration required to connect to aws and `S3` 
 ![alt text](Sparkify_STAR_ERD.png "Logo Sparkify ERD")
 
 ## ETL process for sparkify
-![alt text](Sparkify%20ETL%20Process.png "ETL process")
+![alt text](Sparkiy%20ETL%20Process.png "ETL process")
