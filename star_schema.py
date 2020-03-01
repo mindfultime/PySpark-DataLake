@@ -15,7 +15,7 @@ def dim_users(df):
                           F.col("firstName").alias("first_name"),
                           F.col("lastName").alias("last_name"),
                           "gender",
-                          "level").distinct()
+                          "level")
 
     return dim_users
 
@@ -33,7 +33,7 @@ def dim_artists(df):
                             F.col("title").alias("song"),
                             F.col("artist_location").alias("location"),
                             F.col("artist_latitude").alias("latitude"),
-                            F.col("artist_longitude").alias("longitude")).distinct()
+                            F.col("artist_longitude").alias("longitude"))
 
     return dim_artists
 
@@ -51,7 +51,7 @@ def dim_songs(df):
                           F.col("title").alias("song"),
                           "artist_id",
                           "year",
-                          "duration").distinct()
+                          "duration")
 
     return dim_songs
 
@@ -64,6 +64,9 @@ def dim_time(df):
         :param df: log dataframe
         :return: dim_time table
         """
+    # converting nano epoch to timestamp in column start_time
+    df = df.withColumn("start_time", (df.ts / 1000).cast("timestamp"))
+
     dim_time = df.select(F.col("start_time"),
                          F.hour(F.col("start_time").alias("hour")),
                          F.dayofmonth(F.col("start_time").alias("day")),
@@ -71,7 +74,7 @@ def dim_time(df):
                          F.month(F.col("start_time").alias("month")),
                          F.year(F.col("start_time").alias("year")),
                          F.date_format(F.col("start_time"), 'F').alias("weekday")
-                         ).distinct()
+                         )
 
     return dim_time
 
