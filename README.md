@@ -66,17 +66,16 @@ This file consists of all the configuration required to connect to aws and `S3` 
     
 ## Execution of the project
 1. To launch in EMR configure the cluster with the following JSON script. This will make sure the cluster is running in python 3.x rather 2.x.
-#### EMR  Setup instruction for Python 3 [ Instruction as per AWS ] (https://aws.amazon.com/premiumsupport/knowledge-center/emr-pyspark-python-3x/)
+#### EMR  Setup instruction for Python 3 [ Instruction as per AWS ](https://aws.amazon.com/premiumsupport/knowledge-center/emr-pyspark-python-3x/)
     
 #### Resolution
 On a running cluster
 
 1. Run the following command to change the default Python environment:
-`sudo sed -i -e '$a\export PYSPARK_PYTHON=/usr/bin/python3' /etc/spark/conf/spark-env.sh`
+    `sudo sed -i -e '$a\export PYSPARK_PYTHON=/usr/bin/python3' /etc/spark/conf/spark-env.sh`
 
-2. Run the pyspark command to confirm that PySpark is using the correct version of Python:
-
-`[hadoop@ip-X-X-X-X conf]$ pyspark`
+2. Run the pyspark command to confirm that PySpark is using the correct version of Python: 
+    `[hadoop@ip-X-X-X-X conf]$ pyspark`
 
 #### On a new cluster
 
