@@ -24,7 +24,7 @@ song_data/A/A/B/TRAABJL12903CDCF1A.json
 
 And below is an example of what a single song file, TRAABJL12903CDCF1A.json, looks like.
 
-```
+```json
 {"num_songs": 1, "artist_id": "ARJIE2Y1187B994AB7", "artist_latitude": null, "artist_longitude": null, "artist_location": "", "artist_name": "Line Renaud", "song_id": "SOUPIRU12A6D4FA1E1", "title": "Der Kleine Dompfaff", "duration": 152.92036, "year": 0}
 ```
 
@@ -72,16 +72,17 @@ This file consists of all the configuration required to connect to aws and `S3` 
 On a running cluster
 
 1. Run the following command to change the default Python environment:
-2. sudo sed -i -e '$a\export PYSPARK_PYTHON=/usr/bin/python3' /etc/spark/conf/spark-env.sh
-3. Run the pyspark command to confirm that PySpark is using the correct version of Python:
+`sudo sed -i -e '$a\export PYSPARK_PYTHON=/usr/bin/python3' /etc/spark/conf/spark-env.sh`
 
-[hadoop@ip-X-X-X-X conf]$ pyspark
+2. Run the pyspark command to confirm that PySpark is using the correct version of Python:
+
+`[hadoop@ip-X-X-X-X conf]$ pyspark`
 
 #### On a new cluster
 
 Add a configuration object similar to the following when you launch a cluster using Amazon EMR release version 4.6.0 or later:
 
-` json
+```json
 [
   {
      "Classification": "spark-env",
@@ -95,7 +96,7 @@ Add a configuration object similar to the following when you launch a cluster us
     ]
   }
 ]
-`
+```
 2. pip install configparser in the EMR master node. 
 3. Execute in `terminal:` `python etl.py`. This will extract, transform, and finally load the data in the database.
 
